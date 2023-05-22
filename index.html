@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>randomland</title>
+  <style>
+    body {
+      text-align: center;
+      padding-top: 100px;
+      font-family: Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <h1>Evento del dia aleatorio</h1>
+  <p id="event"></p>
+
+  <script>
+    // Función para generar un número aleatorio entre min y max (ambos incluidos)
+    function getRandomNumber(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Realizar una solicitud HTTP para obtener el archivo de texto
+    var request = new XMLHttpRequest();
+    request.open("GET", "eventos.txt", false);
+    request.send(null);
+
+    // Verificar si la solicitud fue exitosa
+    if (request.status === 200) {
+      // Obtener el contenido del archivo de texto
+      var eventsText = request.responseText;
+
+      // Convertir el contenido en un array de eventos
+      var events = eventsText.split("\n").map(function(event) {
+        return event.trim();
+      });
+
+      // Obtener el número del día del año actual
+      var today = new Date();
+      var dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+
+      // Generar un índice aleatorio basado en el número del día del año
+      var randomIndex = getRandomNumber(0, events.length - 1);
+
+      // Mostrar el evento aleatorio en la página
+      var eventElement = document.getElementById("event");
+      eventElement.textContent = "Evento del dia " + dayOfYear + ": " + events[randomIndex];
+    }
+  </script>
+</body>
+</html>
