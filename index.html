@@ -28,15 +28,34 @@
       "Dia del Internet inutil [theuselessweb.com]"
     ];
 
-    // Obtener el número del día del año actual
-    var today = new Date();
-    var dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+      var today = new Date();
+      var dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
 
-      setCookie("event", randomEvent, 1);
-      setCookie("dayOfYear", dayOfYear, 1);
+      // Obtener el evento almacenado en la cookie
+      var storedEvent = getCookie("event");
+      var storedDayOfYear = parseInt(getCookie("dayOfYear"));
 
-      // Mostrar el evento aleatorio en la página
-      document.getElementById("event").textContent = "Evento del día " + dayOfYear + ": " + randomEvent;
+      if (storedEvent && storedDayOfYear === dayOfYear) {
+        // Si hay un evento almacenado para el día actual, mostrarlo
+        document.getElementById("event").textContent = "Evento del día " + dayOfYear + ": " + storedEvent;
+      } else {
+        // Borra la cookie existente si el día de creación es diferente al día actual
+        deleteCookie("event");
+        deleteCookie("dayOfYear");
+
+        // Generar un índice aleatorio basado en el número del día del año
+        var randomIndex = getRandomNumber(0, events.length - 1);
+
+        // Obtener el evento aleatorio del array de eventos
+        var randomEvent = events[randomIndex];
+
+        // Guardar el evento en la cookie para recordarlo durante el día
+        setCookie("event", randomEvent, 1);
+        setCookie("dayOfYear", dayOfYear, 1);
+
+        // Mostrar el evento aleatorio en la página
+        document.getElementById("event").textContent = "Evento del día " + dayOfYear + ": " + randomEvent;
+      }
     }
 
     // Función para establecer una cookie
@@ -66,13 +85,6 @@
     function deleteCookie(name) {
       document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     }
-    
-    // Generar un índice aleatorio basado en el número del día del año
-    var randomIndex = getRandomNumber(0, events.length - 1);
-
-    // Mostrar el evento aleatorio en la página
-    var eventElement = document.getElementById("event");
-    eventElement.textContent = "Evento del día " + dayOfYear + ": " + events[randomIndex];
   </script>
 </body>
 </html>
